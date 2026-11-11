@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Steam Player Pulse Memo</title>
+<style>
+:root{--bg:#f7f7f5;--card:#fff;--ink:#1d1d1f;--muted:#6b6b70;--line:#e4e4e0;--accent:#2f5bd3}
+@media (prefers-color-scheme:dark){:root{--bg:#141416;--card:#1d1d20;--ink:#ececec;--muted:#9b9ba1;--line:#2e2e33;--accent:#7b9cff}}
+body{margin:0;background:var(--bg);color:var(--ink);font:15.5px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif}
+article{max-width:760px;margin:0 auto;padding:32px 16px 60px}
+.paper{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:28px 30px}
+@media (max-width:600px){.paper{padding:20px 18px}}
+h1{font-size:22px;margin:0 0 4px}
+h2{font-size:15px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:24px 0 6px}
+.meta{color:var(--muted);font-size:13.5px;margin:0 0 18px}
+li{margin-bottom:6px}
+a{color:var(--accent)}
+</style>
+</head>
+<body>
+<article><div class="paper">
+<h1>Steam Player Pulse: bots, sales and spikes in 1.9M player counts</h1>
+<p class="meta">Satwik Kotta · Steam concurrent players and store prices, August to November 2026 · <a href="index.html">Dashboard</a> · <a href="https://github.com/satwik-kotta/steam-player-pulse">Code</a></p>
+
+<h2>Questions</h2>
+<p>Player counts decide which games Steam shows and how publishers judge a launch or a sale. Three questions a platform, trust and safety or live operations team would ask of them: whose players are real people, what a discount does to players, and what is behind sudden spikes.</p>
+
+<h2>Findings</h2>
+<ul>
+<li><b>A flat day is a fingerprint of play without a person.</b> Real players sleep, so the typical game has 2.2x more players at its busiest hour than its quietest (Counter-Strike 2 2.4x, PUBG 5.8x). Bongo Cat (1.36x), Banana, known for item farming (1.37x), and MIR4 (1.13x) barely move. Ranking 1,807 established games by flatness, 48% of the 25 flattest are idle games by name, against 2.7% overall, an 18x lift (AUC 0.85). This is a cheap first screen for inflated player counts, not proof of bots.</li>
+<li><b>The Autumn Sale lifted players 28% (95% CI 25 to 32%), and most of the lift stayed.</b> 1,559 discounted games against 250 paid games at full price, with game and day fixed effects. Two weeks after the sale ended the gap was still 17% (12 to 22%). Trends before the sale were flat (mean absolute 1.5% a day). Deeper discounts lifted more: 25% for up to 33% off, 31% for 67% or more.</li>
+<li><b>A discount on its own did about twice as much.</b> Across 3,111 discounts outside the big sale (median 65% off), players rose 56% (52 to 60%) in the first week, peaking near 78% on day 6. During the sale, 81% of tracked games were discounted at once, so each one competed for the same attention.</li>
+<li><b>Most spikes are not about price.</b> Of 275 player spikes in paid games (players at least doubled against the last two weeks, beyond five times normal noise), 55% came with no price change: updates, new seasons, free weekends and streamers. A price feed alone misses most of what moves a game.</li>
+</ul>
+
+<h2>Data and checks</h2>
+<ul>
+<li>Two public git scraped collections read at pinned commits: 1,922,759 player count samples for 35,244 games from Steam's public API, sampled about daily at a rotating hour, and store prices in 8 regions twice a day. Loaded into DuckDB.</li>
+<li>Every UTC hour is covered, which is what makes the daily cycle measurable. 5 samples where the API declined to answer are kept as missing, not zero. No duplicate samples. 79 of 4.39M US price rows have a discount that disagrees with the prices.</li>
+<li>The price watchlist grew from 6,386 to 31,550 games over the period, so games added late are left out of comparisons that need two weeks of prices before the sale.</li>
+</ul>
+
+<h2>Limits</h2>
+<p>Three months of data. Games choose whether to join a sale, so the comparison controls for each game's level and each calendar day, not for why a game was discounted. Lift is in concurrent players, not revenue. Idle names are a weak label, and an idle game is not a cheat: the cycle flags play without a person, which a team would then investigate.</p>
+</div></article>
+</body>
+</html>
